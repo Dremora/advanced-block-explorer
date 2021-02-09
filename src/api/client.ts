@@ -18,8 +18,11 @@ export const callClient = async (
   console.log(useCache, process.env.REDIS_URL);
 
   if (useCache && cache) {
+    const start = process.hrtime.bigint();
     const key = JSON.stringify({ name, args });
     const cachedValue = await cacheGet(key);
+    const end = process.hrtime.bigint();
+    console.debug(`cache access took ${(end - start) / BigInt(1000000)} ms`);
     if (cachedValue !== null) {
       console.debug("cache hit", key);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
