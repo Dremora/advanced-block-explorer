@@ -1,7 +1,10 @@
 import { TransactionTrace } from "@parsiq/block-tracer";
 import { GetServerSideProps } from "next";
 
-import { getBlockTrace } from "../../../api/getBlockTrace";
+import { getBlockTrace } from "src/api/api";
+import PageContainer from "src/components/PageContainer";
+import PageHeader from "src/components/PageHeader";
+import { formatHashWithEllipsis } from "src/utils";
 
 type Props = {
   transactionTrace: TransactionTrace | null;
@@ -13,10 +16,12 @@ export default function Transaction({ transactionTrace }: Props) {
   }
 
   return (
-    <div>
-      <h1>Transaction {transactionTrace.txHash}</h1>
+    <PageContainer>
+      <PageHeader>
+        Transaction {formatHashWithEllipsis(transactionTrace.txHash)}
+      </PageHeader>
       <div>Origin: {transactionTrace.origin}</div>
-    </div>
+    </PageContainer>
   );
 }
 
@@ -28,7 +33,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const blockTrace = await getBlockTrace(blockNumber);
 
   const transactionTrace =
-    blockTrace?.txs.find((tx) => tx.txHash === transactionHash) ?? null;
+    blockTrace.txs.find((tx) => tx.txHash === transactionHash) ?? null;
 
   return {
     props: { transactionTrace },

@@ -73,7 +73,6 @@ module.exports = {
       { classes: false, functions: false }
     ],
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
-    'no-type-assertion/no-type-assertion': 'error',
     'no-restricted-globals': ['error'].concat(restrictedGlobals),
     'import/no-cycle': 'error',
     'import/no-extraneous-dependencies': 'error',
@@ -95,7 +94,6 @@ module.exports = {
     'react/prop-types': 'off',
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
-    'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
     'react/jsx-filename-extension': ['error', { extensions: ['tsx'] }],
     'react/no-array-index-key': 'error',
     'react/prefer-stateless-function': 'error',
