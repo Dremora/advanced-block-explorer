@@ -1,23 +1,51 @@
 import JsonRpc from "node-jsonrpc-client";
 
+import { cacheGet, cacheSet } from "./cache";
+
 export const client = new JsonRpc("https://ethdenver-parsiq.net:2096/");
+
+type Options = {
+  cache?: boolean;
+};
 
 export const callClient = async (
   name: string,
-  args: unknown[]
+  args: unknown[],
+  options: Options = {}
 ): Promise<unknown> => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const result = await client.call(name, args);
+  const { cache = true } = options;
 
-  if ("error" in result) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    console.error(result.error);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    throw new Error(result.error);
+  if (cache) {
+    const key = JSON.stringify({ name, args });
+    const cachedValue = await cacheGet(key);
+    if (cachedValue !== null) {
+      // console.debug("cache hit", key);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return JSON.parse(cachedValue);
+    }
+    // console.debug("cache miss", key);
   }
 
-  // eslint-disable-next-line
-  return result.result;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const data = await client.call(name, args);
+
+  if ("error" in data) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.error(data.error);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    throw new Error(data.error);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { result } = data;
+
+  if (cache) {
+    const key = JSON.stringify({ name, args });
+    void cacheSet(key, JSON.stringify(result));
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return result;
 };
 
 callClient.debug = async (name: string, args: unknown[]): Promise<unknown> => {

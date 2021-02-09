@@ -24,7 +24,9 @@ export async function getBlockTrace(blockNumber: string): Promise<BlockTrace> {
 }
 
 export async function getLatestBlock(): Promise<number> {
-  const result = await callClient("eth_blockNumber", []);
+  const result = await callClient("eth_blockNumber", [], {
+    cache: false,
+  });
 
   return parseInt(result as string, 16);
 }
