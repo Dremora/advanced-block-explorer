@@ -14,7 +14,7 @@ export default function Transaction({ transactionTrace }: Props) {
 
   return (
     <div>
-      <div>Hash: {transactionTrace.txHash}</div>
+      <h1>Transaction {transactionTrace.txHash}</h1>
       <div>Origin: {transactionTrace.origin}</div>
     </div>
   );

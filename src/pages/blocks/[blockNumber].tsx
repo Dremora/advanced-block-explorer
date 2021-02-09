@@ -15,6 +15,7 @@ export default function Block({ blockTrace }: Props) {
 
   return (
     <div>
+      <h1>Block {blockTrace.header.blockNumber}</h1>
       {blockTrace.txs.map((tx) => (
         <div key={tx.txHash}>
           <Link href={`/blocks/${blockTrace.header.blockNumber}/${tx.txHash}`}>
