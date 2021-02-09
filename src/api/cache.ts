@@ -2,6 +2,8 @@ import { promisify } from "util";
 
 import redis from "redis";
 
+export const useCache = Boolean(process.env.REDIS_URL);
+
 const client = redis.createClient({
   url: process.env.REDIS_URL,
 });
@@ -10,8 +12,12 @@ client.on("error", (err) => {
   console.error(`Redis error ${err}`);
 });
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
-export const cacheGet = promisify(client.get).bind(client);
+export const cacheGet = useCache
+  ? // eslint-disable-next-line @typescript-eslint/unbound-method
+    promisify(client.get).bind(client)
+  : () => new Promise((resolve, reject) => reject(new Error("Redis disabled")));
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
-export const cacheSet = promisify(client.set).bind(client);
+export const cacheSet = useCache
+  ? // eslint-disable-next-line @typescript-eslint/unbound-method
+    promisify(client.set).bind(client)
+  : () => Promise.resolve(null);

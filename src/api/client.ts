@@ -1,6 +1,6 @@
 import JsonRpc from "node-jsonrpc-client";
 
-import { cacheGet, cacheSet } from "./cache";
+import { cacheGet, cacheSet, useCache } from "./cache";
 
 export const client = new JsonRpc("https://ethdenver-parsiq.net:2096/");
 
@@ -15,13 +15,13 @@ export const callClient = async (
 ): Promise<unknown> => {
   const { cache = true } = options;
 
-  if (cache) {
+  if (useCache && cache) {
     const key = JSON.stringify({ name, args });
     const cachedValue = await cacheGet(key);
     if (cachedValue !== null) {
       // console.debug("cache hit", key);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return JSON.parse(cachedValue);
+      return JSON.parse(cachedValue as string);
     }
     // console.debug("cache miss", key);
   }
@@ -39,7 +39,7 @@ export const callClient = async (
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { result } = data;
 
-  if (cache) {
+  if (useCache && cache) {
     const key = JSON.stringify({ name, args });
     void cacheSet(key, JSON.stringify(result));
   }
