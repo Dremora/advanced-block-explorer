@@ -15,15 +15,17 @@ export const callClient = async (
 ): Promise<unknown> => {
   const { cache = true } = options;
 
+  console.log(useCache, process.env.REDIS_URL);
+
   if (useCache && cache) {
     const key = JSON.stringify({ name, args });
     const cachedValue = await cacheGet(key);
     if (cachedValue !== null) {
-      // console.debug("cache hit", key);
+      console.debug("cache hit", key);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return JSON.parse(cachedValue as string);
     }
-    // console.debug("cache miss", key);
+    console.debug("cache miss", key);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
