@@ -9,7 +9,9 @@
     "lint": "eslint src --ext js,ts,tsx"
   },
   "dependencies": {
+    "@parsiq/block-tracer": "^0.2.5",
     "next": "10.0.6",
+    "node-jsonrpc-client": "^1.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },
