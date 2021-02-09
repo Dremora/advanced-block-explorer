@@ -1,5 +1,4 @@
 import { GetServerSideProps } from "next";
-import Link from "next/link";
 
 import {
   BlockHeader,
@@ -7,6 +6,7 @@ import {
   getBlocksFrom,
   getLatestBlock,
 } from "src/api/api";
+import { Anchor } from "src/components/Anchor";
 import PageContainer from "src/components/PageContainer";
 import PageHeader from "src/components/PageHeader";
 
@@ -21,9 +21,9 @@ export default function Home({ blocks }: Props) {
 
       {blocks.map((block) => (
         <div key={block.number} title={block.hash}>
-          <Link href={`/blocks/${block.hash}`}>
+          <Anchor href={`/blocks/${block.hash}`}>
             <span>{block.number}</span>
-          </Link>
+          </Anchor>
         </div>
       ))}
     </PageContainer>

@@ -1,8 +1,8 @@
 import { BlockTrace } from "@parsiq/block-tracer";
 import { GetServerSideProps } from "next";
-import Link from "next/link";
 
 import { getBlockTrace } from "src/api/api";
+import { Anchor } from "src/components/Anchor";
 import PageContainer from "src/components/PageContainer";
 import PageHeader from "src/components/PageHeader";
 
@@ -20,9 +20,11 @@ export default function Block({ blockTrace }: Props) {
       <PageHeader>Block {blockTrace.header.blockNumber}</PageHeader>
       {blockTrace.txs.map((tx) => (
         <div key={tx.txHash}>
-          <Link href={`/blocks/${blockTrace.header.blockNumber}/${tx.txHash}`}>
+          <Anchor
+            href={`/blocks/${blockTrace.header.blockNumber}/${tx.txHash}`}
+          >
             {tx.txHash}
-          </Link>
+          </Anchor>
         </div>
       ))}
     </PageContainer>
