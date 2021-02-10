@@ -31,6 +31,7 @@ const Sections = styled.div`
 `;
 
 const Section = styled.div`
+  padding: 0 10px;
   width: 50%;
   flex-shrink: 0;
   flex-grow: 0;
