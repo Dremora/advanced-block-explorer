@@ -17,9 +17,11 @@ const StyledLink = styled.a`
   ${body};
 `;
 
-export function Anchor({ href, children }: Props) {
+type AProps = React.ComponentProps<"a">;
+
+export function Anchor({ href, children, ...rest }: Props & AProps) {
   return (
-    <Link href={href} passHref>
+    <Link href={href} passHref {...rest}>
       <StyledLink>{children}</StyledLink>
     </Link>
   );

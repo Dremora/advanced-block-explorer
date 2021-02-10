@@ -50,3 +50,18 @@ export async function getBlockByNumber(blockNumber: number): Promise<EthBlock> {
 
   return block as EthBlock;
 }
+
+export type TransactionInfo = {
+  txHash: string;
+  operation: string;
+};
+
+export function transactionsInfoFromBlock(
+  block: BlockTrace
+): TransactionInfo[] {
+  return block.txs.map((tx) => ({
+    txHash: tx.txHash,
+    operation: tx.item.op,
+    // status: traceTx(tx)[0].tx.
+  }));
+}

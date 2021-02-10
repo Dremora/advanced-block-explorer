@@ -2,16 +2,23 @@ import { BlockTrace } from "@parsiq/block-tracer";
 import { GetServerSideProps } from "next";
 import styled from "styled-components";
 
-import { getBlockTrace } from "src/api/api";
+import {
+  getBlockTrace,
+  TransactionInfo,
+  transactionsInfoFromBlock,
+} from "src/api/api";
 import { Anchor } from "src/components/Anchor";
 import Heading from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
+import { TransactionsList } from "src/components/TransactionsList";
 import { gray } from "src/styles/colors";
 import { body } from "src/styles/typography";
 import { formatEth, formatHashWithEllipsis, gasPercentage } from "src/utils";
 
 type Props = {
-  blockTrace: BlockTrace | null;
+  blockHeader: BlockTrace["header"] | null;
+  rewards: BlockTrace["rewards"];
+  transactions: TransactionInfo[];
 };
 
 const Sections = styled.div`
@@ -41,8 +48,8 @@ const Value = styled.div`
   font-weight: 700;
 `;
 
-export default function Block({ blockTrace }: Props) {
-  if (!blockTrace) {
+export default function Block({ blockHeader, rewards, transactions }: Props) {
+  if (!blockHeader) {
     return <div>Block not found</div>;
   }
 
@@ -50,18 +57,18 @@ export default function Block({ blockTrace }: Props) {
     <PageContainer>
       <Sections>
         <Section>
-          <Heading>Block #{blockTrace.header.blockNumber}</Heading>
+          <Heading>Block #{blockHeader.blockNumber}</Heading>
 
           <KeyValue>
             <Key>Hash: </Key>
-            <Value>{formatHashWithEllipsis(blockTrace.header.blockHash)}</Value>
+            <Value>{formatHashWithEllipsis(blockHeader.blockHash)}</Value>
           </KeyValue>
 
           <KeyValue>
             <Key>Parent: </Key>
             <Value>
-              <Anchor href={`/blocks/${blockTrace.header.parentBlockHash}`}>
-                {formatHashWithEllipsis(blockTrace.header.parentBlockHash)}
+              <Anchor href={`/blocks/${blockHeader.parentBlockHash}`}>
+                {formatHashWithEllipsis(blockHeader.parentBlockHash)}
               </Anchor>
             </Value>
           </KeyValue>
@@ -69,10 +76,10 @@ export default function Block({ blockTrace }: Props) {
           <KeyValue>
             <Key>Gas Used: </Key>
             <Value>
-              {blockTrace.header.gasUsed} (
+              {blockHeader.gasUsed} (
               {gasPercentage(
-                parseInt(blockTrace.header.gasUsed),
-                parseInt(blockTrace.header.gasLimit)
+                parseInt(blockHeader.gasUsed),
+                parseInt(blockHeader.gasLimit)
               )}
               )
             </Value>
@@ -95,7 +102,7 @@ export default function Block({ blockTrace }: Props) {
           <KeyValue>
             <Value>
               <ul>
-                {blockTrace.rewards.map((reward) => (
+                {rewards.map((reward) => (
                   <li key={reward.beneficiary}>
                     <Value>{reward.beneficiary}</Value>
                     <Value>{formatEth(reward.reward)}</Value>
@@ -107,15 +114,12 @@ export default function Block({ blockTrace }: Props) {
         </Section>
         <Section>
           <Heading>Transactions</Heading>
-          {blockTrace.txs.map((tx) => (
-            <div key={tx.txHash}>
-              <Anchor
-                href={`/blocks/${blockTrace.header.blockHash}/${tx.txHash}`}
-              >
-                {formatHashWithEllipsis(tx.txHash)}
-              </Anchor>
-            </div>
-          ))}
+
+          <TransactionsList
+            includeIndex
+            transactionsBlockHash={blockHeader.blockHash}
+            transactions={transactions}
+          />
         </Section>
       </Sections>
     </PageContainer>
@@ -129,6 +133,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const blockTrace = await getBlockTrace(blockHash);
 
   return {
-    props: { blockTrace },
+    props: {
+      blockHeader: blockTrace.header,
+      rewards: blockTrace.rewards,
+      transactions: transactionsInfoFromBlock(blockTrace),
+    },
   };
 };
