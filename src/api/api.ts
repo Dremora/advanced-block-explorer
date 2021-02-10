@@ -5,6 +5,7 @@ import { callClient } from "./client";
 export type BlockHeader = {
   number: number;
   hash: string;
+  gasPrice: string;
   parentHash: string;
 };
 

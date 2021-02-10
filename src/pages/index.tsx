@@ -14,6 +14,7 @@ import { Anchor } from "src/components/Anchor";
 import Heading from "src/components/Heading";
 import { Operation } from "src/components/Operation";
 import PageContainer from "src/components/PageContainer";
+import { Table, Tbody, Td, Th, Thead, Tr } from "src/components/Table";
 import { formatHashWithEllipsis } from "src/utils";
 import { fetcher } from "src/utils/fetcher";
 
@@ -62,13 +63,28 @@ export default function Home({
         <Section>
           <Heading>Recent Blocks</Heading>
 
-          {blocks.map((block) => (
-            <div key={block.number} title={block.hash}>
-              <Anchor href={`/blocks/${block.hash}`}>
-                <span>{block.number}</span>
-              </Anchor>
-            </div>
-          ))}
+          <Table>
+            <Thead>
+              <Tr>
+                <Th align="right">Number</Th>
+                <Th>Hash</Th>
+                <Th>Gas Price</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {blocks.map((block) => (
+                <Tr key={block.number} title={block.hash}>
+                  <Td align="right">{block.number}</Td>
+                  <Td>
+                    <Anchor href={`/blocks/${block.hash}`}>
+                      <span>{formatHashWithEllipsis(block.hash)}</span>
+                    </Anchor>
+                  </Td>
+                  <Td>{block.gasPrice} </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
         </Section>
 
         <Section>
