@@ -31,6 +31,12 @@ export async function getLatestBlock(): Promise<number> {
   return parseInt(result as string, 16);
 }
 
+export async function getLatestBlocks(): Promise<BlockHeader[]> {
+  const blockNumber = await getLatestBlock();
+  const latestBlock = await getBlockByNumber(blockNumber);
+  return getBlocksFrom(latestBlock.hash);
+}
+
 type EthBlock = {
   hash: string;
 };

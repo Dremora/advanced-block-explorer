@@ -1,6 +1,7 @@
-import { BlockTrace, traceTx } from "@parsiq/block-tracer";
+import { BlockTrace } from "@parsiq/block-tracer";
 import { GetServerSideProps } from "next";
 import styled from "styled-components";
+import useSWR from "swr";
 
 import {
   BlockHeader,
@@ -14,6 +15,7 @@ import Heading from "src/components/Heading";
 import { Operation } from "src/components/Operation";
 import PageContainer from "src/components/PageContainer";
 import { formatHashWithEllipsis } from "src/utils";
+import { fetcher } from "src/utils/fetcher";
 
 type Transaction = {
   hash: string;
@@ -44,10 +46,16 @@ const TransactionContainer = styled.div`
 `;
 
 export default function Home({
-  blocks,
+  blocks: initialBlocks,
   transactions,
   transactionsBlockHash,
 }: Props) {
+  const { data: blocks = [] } = useSWR<BlockHeader[]>(
+    "/api/latest-blocks",
+    fetcher,
+    { refreshInterval: 14000, initialData: initialBlocks }
+  );
+
   return (
     <PageContainer>
       <Sections>
