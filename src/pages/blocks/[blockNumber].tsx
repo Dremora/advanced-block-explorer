@@ -3,8 +3,8 @@ import { GetServerSideProps } from "next";
 
 import { getBlockTrace } from "src/api/api";
 import { Anchor } from "src/components/Anchor";
+import Heading from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
-import PageHeader from "src/components/PageHeader";
 
 type Props = {
   blockTrace: BlockTrace | null;
@@ -17,7 +17,7 @@ export default function Block({ blockTrace }: Props) {
 
   return (
     <PageContainer>
-      <PageHeader>Block {blockTrace.header.blockNumber}</PageHeader>
+      <Heading>Block {blockTrace.header.blockNumber}</Heading>
       {blockTrace.txs.map((tx) => (
         <div key={tx.txHash}>
           <Anchor

@@ -2,8 +2,8 @@ import { TransactionTrace } from "@parsiq/block-tracer";
 import { GetServerSideProps } from "next";
 
 import { getBlockTrace } from "src/api/api";
+import Heading from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
-import PageHeader from "src/components/PageHeader";
 import { formatHashWithEllipsis } from "src/utils";
 
 type Props = {
@@ -17,9 +17,9 @@ export default function Transaction({ transactionTrace }: Props) {
 
   return (
     <PageContainer>
-      <PageHeader>
+      <Heading>
         Transaction {formatHashWithEllipsis(transactionTrace.txHash)}
-      </PageHeader>
+      </Heading>
       <div>Origin: {transactionTrace.origin}</div>
     </PageContainer>
   );

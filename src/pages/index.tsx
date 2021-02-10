@@ -7,8 +7,8 @@ import {
   getLatestBlock,
 } from "src/api/api";
 import { Anchor } from "src/components/Anchor";
+import Heading from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
-import PageHeader from "src/components/PageHeader";
 
 type Props = {
   blocks: BlockHeader[];
@@ -17,7 +17,7 @@ type Props = {
 export default function Home({ blocks }: Props) {
   return (
     <PageContainer>
-      <PageHeader>Latest blocks</PageHeader>
+      <Heading>Recent Blocks</Heading>
 
       {blocks.map((block) => (
         <div key={block.number} title={block.hash}>

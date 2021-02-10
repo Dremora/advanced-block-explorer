@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import styled from "styled-components";
 
 import { blue } from "src/styles/colors";
+import { body } from "src/styles/typography";
 
 type Props = {
   children: ReactNode;
@@ -12,6 +13,8 @@ type Props = {
 const StyledLink = styled.a`
   color: ${blue};
   cursor: pointer;
+  text-decoration: underline;
+  ${body};
 `;
 
 export function Anchor({ href, children }: Props) {
