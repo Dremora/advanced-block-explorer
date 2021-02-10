@@ -1,4 +1,4 @@
-export function formatHashWithEllipsis(text: string, show = 13) {
+export function formatHashWithEllipsis(text: string, show = 20) {
   if (text.length < show) {
     return text;
   }

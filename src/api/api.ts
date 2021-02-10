@@ -17,8 +17,8 @@ export async function getBlocksFrom(
   return result as BlockHeader[];
 }
 
-export async function getBlockTrace(blockNumber: string): Promise<BlockTrace> {
-  const result = await callClient("debug_transferTrace", [blockNumber]);
+export async function getBlockTrace(blockHash: string): Promise<BlockTrace> {
+  const result = await callClient("debug_transferTrace", [blockHash]);
 
   return result as BlockTrace;
 }

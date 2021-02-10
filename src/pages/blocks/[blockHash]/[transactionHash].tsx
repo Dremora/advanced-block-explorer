@@ -28,9 +28,9 @@ export default function Transaction({ transactionTrace }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const blockNumber = String(context.query.blockNumber);
+  const blockHash = String(context.query.blockHash);
   const transactionHash = String(context.query.transactionHash);
-  const blockTrace = await getBlockTrace(blockNumber);
+  const blockTrace = await getBlockTrace(blockHash);
 
   const transactionTrace =
     blockTrace.txs.find((tx) => tx.txHash === transactionHash) ?? null;

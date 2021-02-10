@@ -34,8 +34,8 @@ export default function Block({ blockTrace }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const blockNumber = String(context.query.blockNumber);
-  const blockTrace = await getBlockTrace(blockNumber);
+  const blockHash = String(context.query.blockHash);
+  const blockTrace = await getBlockTrace(blockHash);
 
   return {
     props: { blockTrace },
