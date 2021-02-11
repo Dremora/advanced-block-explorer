@@ -9,6 +9,9 @@
     "lint": "eslint src --ext js,ts,tsx"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@parsiq/block-tracer": "^0.2.5",
     "next": "10.0.6",
     "node-jsonrpc-client": "^1.0.3",
@@ -19,6 +22,7 @@
     "swr": "^0.4.2"
   },
   "devDependencies": {
+    "@types/material-ui": "^0.21.8",
     "@types/node": "^14.14.25",
     "@types/react": "^17.0.1",
     "@types/redis": "^2.8.28",

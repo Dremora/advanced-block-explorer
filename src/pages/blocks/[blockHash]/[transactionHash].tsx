@@ -7,6 +7,10 @@ import { getBlockTrace } from "src/api/api";
 import { Anchor } from "src/components/Anchor";
 import Heading from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
+import {
+  TransactionTree,
+  TransactionTreeProps,
+} from "src/components/TransactionTree";
 import { gray } from "src/styles/colors";
 import { body } from "src/styles/typography";
 import { formatEth, formatHashWithEllipsis, gasPercentage } from "src/utils";
@@ -14,6 +18,7 @@ import { formatEth, formatHashWithEllipsis, gasPercentage } from "src/utils";
 type Props = {
   transactionIndex: number;
   transactionTrace: TransactionTrace | null;
+  transactionItem?: TransactionTreeProps["transactionItem"];
 };
 
 const Sections = styled.div`
@@ -46,13 +51,46 @@ const Value = styled.div`
 export default function Transaction({
   transactionIndex,
   transactionTrace,
-}: Props) {
+}: // transactionItem, TODO:
+Props) {
   const router = useRouter();
   const blockHash = String(router.query.blockHash);
   if (!transactionTrace) {
     return <div>Transaction not found</div>;
   }
 
+  const transactionItem: TransactionTreeProps["transactionItem"] = {
+    from: "0x7065",
+    to: "0xefe3",
+    value: "3985549674596854",
+    items: [
+      {
+        from: "0x7066",
+        to: "0xefe3",
+        value: "3985549674596854",
+        items: [
+          {
+            from: "0x7067",
+            to: "0xefe3",
+            value: "3985549674596854",
+            items: [],
+          },
+          {
+            from: "0x7099",
+            to: "0xefe3",
+            value: "3985549674596854",
+            items: [],
+          },
+        ],
+      },
+      {
+        from: "0x7068",
+        to: "0xefe3",
+        value: "3985549674596854",
+        items: [],
+      },
+    ],
+  };
   return (
     <PageContainer>
       <Sections>
@@ -102,7 +140,11 @@ export default function Transaction({
             <Value>{formatEth(transactionTrace.item.value)}</Value>
           </KeyValue>
         </Section>
-        <Section />
+        <Section>
+          {transactionItem && (
+            <TransactionTree transactionItem={transactionItem} />
+          )}
+        </Section>
       </Sections>
     </PageContainer>
   );
