@@ -56,6 +56,7 @@ export type TransactionInfo = {
   operation: string;
   index: number;
   success: boolean;
+  gasUsed: string;
 };
 
 export function transactionsInfoFromBlock(
@@ -65,6 +66,7 @@ export function transactionsInfoFromBlock(
     .map((tx, index) => ({
       index: index + 1,
       txHash: tx.txHash,
+      gasUsed: tx.gasUsed,
       operation:
         tx.item.data === "0x" && !tx.item.items
           ? "TRANSFER"
