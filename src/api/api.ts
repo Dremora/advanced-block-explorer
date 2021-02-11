@@ -61,7 +61,12 @@ export function transactionsInfoFromBlock(
 ): TransactionInfo[] {
   return block.txs.map((tx) => ({
     txHash: tx.txHash,
-    operation: tx.item.op,
+    operation:
+      tx.item.data === "0x" && !tx.item.items
+        ? "TRANSFER"
+        : tx.item.address === "0x"
+        ? "DEPLOYMENT"
+        : tx.item.op,
     // status: traceTx(tx)[0].tx.
   }));
 }
