@@ -1,5 +1,3 @@
-import { trace } from "console";
-
 import {
   Message,
   traceBlock,
