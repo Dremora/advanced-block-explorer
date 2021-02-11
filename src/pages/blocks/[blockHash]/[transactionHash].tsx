@@ -1,4 +1,11 @@
-import { TransactionTrace } from "@parsiq/block-tracer";
+import { trace } from "console";
+
+import {
+  Message,
+  traceBlock,
+  traceTx,
+  TransactionTrace,
+} from "@parsiq/block-tracer";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/dist/client/router";
 import styled from "styled-components";
@@ -15,7 +22,20 @@ import { gray } from "src/styles/colors";
 import { body } from "src/styles/typography";
 import { formatEth, formatHashWithEllipsis, gasPercentage } from "src/utils";
 
+export declare type GasRange = readonly [number, number];
+
+type NewMessage = Omit<Message<never>, "parent"> & {
+  gasRange: GasRange;
+  value: string;
+};
+
+type Node = {
+  message: NewMessage;
+  children: Node[];
+};
+
 type Props = {
+  roots: Node[];
   transactionIndex: number;
   transactionTrace: TransactionTrace | null;
   transactionItem?: TransactionTreeProps["transactionItem"];
@@ -50,6 +70,7 @@ const Value = styled.div`
 
 export default function Transaction({
   transactionIndex,
+  roots,
   transactionTrace,
 }: // transactionItem, TODO:
 Props) {
@@ -93,6 +114,7 @@ Props) {
   };
   return (
     <PageContainer>
+      <pre>{JSON.stringify(roots, null, 2)}</pre>
       <Sections>
         <Section>
           <Heading>
@@ -157,6 +179,44 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const transactionHash = String(context.query.transactionHash);
   const blockTrace = await getBlockTrace(blockHash);
 
+  const map = new Map<Message<never>, Node>();
+  const roots: Node[] = [];
+  for (const transaction of traceBlock(blockTrace)) {
+    for (const { msg } of traceTx(transaction)) {
+      const {
+        parent,
+        gasRange,
+        value,
+        data,
+        ...messageWithoutParent
+      } = msg as Message<never> & {
+        gasRange: GasRange | undefined;
+        value: string | undefined;
+      };
+      const item: Node = {
+        message: {
+          ...messageWithoutParent,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          gasRange: gasRange ?? (parent.gasRange as GasRange),
+          value: value ?? "0",
+          data: data ?? "",
+        },
+        children: [],
+      };
+      map.set(msg, item);
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (msg.parent.level === 0) {
+        roots.push(item);
+      } else {
+        const parent = map.get(msg.parent);
+        parent?.children.push(item);
+      }
+    }
+  }
+
+  console.log(roots);
+
   const transactionTraceIndex = blockTrace.txs.findIndex(
     (tx) => tx.txHash === transactionHash
   );
@@ -165,6 +225,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     transactionTraceIndex === -1 ? null : blockTrace.txs[transactionTraceIndex];
 
   return {
-    props: { transactionIndex, transactionTrace },
+    props: { transactionIndex, transactionTrace, roots },
   };
 };
