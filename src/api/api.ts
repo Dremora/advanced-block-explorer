@@ -54,14 +54,26 @@ export async function getBlockByNumber(blockNumber: number): Promise<EthBlock> {
 export type TransactionInfo = {
   txHash: string;
   operation: string;
+  index: number;
+  success: boolean;
+  gasUsed: string;
 };
 
 export function transactionsInfoFromBlock(
   block: BlockTrace
 ): TransactionInfo[] {
-  return block.txs.map((tx) => ({
-    txHash: tx.txHash,
-    operation: tx.item.op,
-    // status: traceTx(tx)[0].tx.
-  }));
+  return block.txs
+    .map((tx, index) => ({
+      index: index + 1,
+      txHash: tx.txHash,
+      gasUsed: tx.gasUsed,
+      operation:
+        tx.item.data === "0x" && !tx.item.items
+          ? "TRANSFER"
+          : tx.item.address === "0x"
+          ? "DEPLOYMENT"
+          : tx.item.op,
+      success: tx.item.result?.success ?? false,
+    }))
+    .reverse();
 }

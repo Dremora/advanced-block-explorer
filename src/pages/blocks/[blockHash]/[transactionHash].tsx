@@ -127,7 +127,6 @@ export default function Transaction({
 
   return (
     <PageContainer>
-      {/* <pre>{JSON.stringify(roots, null, 2)}</pre> */}
       <Sections>
         <Section>
           <Heading>
