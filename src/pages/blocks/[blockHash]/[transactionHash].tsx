@@ -114,7 +114,6 @@ Props) {
   };
   return (
     <PageContainer>
-      <pre>{JSON.stringify(roots, null, 2)}</pre>
       <Sections>
         <Section>
           <Heading>
@@ -214,8 +213,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       }
     }
   }
-
-  console.log(roots);
 
   const transactionTraceIndex = blockTrace.txs.findIndex(
     (tx) => tx.txHash === transactionHash
