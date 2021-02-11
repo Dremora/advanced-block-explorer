@@ -21,7 +21,7 @@ export const TransactionsList = ({
       <Thead>
         <Tr>
           {includeIndex && <Th align="right">#</Th>}
-          <Th>?</Th>
+          <Th />
           <Th>Hash</Th>
           <Th>Op</Th>
         </Tr>
@@ -30,7 +30,7 @@ export const TransactionsList = ({
         {transactions.map((transaction) => (
           <Tr key={transaction.txHash}>
             {includeIndex && <Td align="right">{transaction.index}</Td>}
-            <Td>?</Td>
+            <Td>{transaction.success ? "✅" : "❌"}</Td>
             <Td>
               <Anchor
                 title={transaction.txHash}

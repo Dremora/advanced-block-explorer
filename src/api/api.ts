@@ -55,6 +55,7 @@ export type TransactionInfo = {
   txHash: string;
   operation: string;
   index: number;
+  success: boolean;
 };
 
 export function transactionsInfoFromBlock(
@@ -70,7 +71,7 @@ export function transactionsInfoFromBlock(
           : tx.item.address === "0x"
           ? "DEPLOYMENT"
           : tx.item.op,
-      // status: traceTx(tx)[0].tx.
+      success: tx.item.result?.success ?? false,
     }))
     .reverse();
 }
