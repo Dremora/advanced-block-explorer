@@ -1,7 +1,4 @@
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
+import { Box, Divider, Paper, Tab, Tabs } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { ArrowRight } from "@material-ui/icons";
 import {
@@ -40,10 +37,9 @@ type Node = {
 };
 
 type Props = {
-  roots: Node[];
+  transactionItems: TransactionTreeProps["transactionItems"];
   transactionIndex: number;
   transactionTrace: TransactionTrace | null;
-  transactionItem?: TransactionTreeProps["transactionItem"];
 };
 
 const Sections = styled.div`
@@ -99,52 +95,18 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
 
 export default function Transaction({
   transactionIndex,
-  roots,
+  transactionItems,
   transactionTrace,
-}: // transactionItem, TODO:
-Props) {
+}: Props) {
   const router = useRouter();
   const blockHash = String(router.query.blockHash);
 
-  const transactionItem: TransactionTreeProps["transactionItem"] = {
-    from: "0x7065",
-    to: "0xefe3",
-    value: "3985549674596854",
-    items: [
-      {
-        from: "0x7066",
-        to: "0xefe3",
-        value: "3985549674596854",
-        items: [
-          {
-            from: "0x7067",
-            to: "0xefe3",
-            value: "3985549674596854",
-            items: [],
-          },
-          {
-            from: "0x7099",
-            to: "0xefe3",
-            value: "3985549674596854",
-            items: [],
-          },
-        ],
-      },
-      {
-        from: "0x7068",
-        to: "0xefe3",
-        value: "3985549674596854",
-        items: [],
-      },
-    ],
-  };
-
   const [selectedTransactionItem, setSelectedTransactionItem] = React.useState(
-    transactionItem
+    transactionItems[0]
   );
 
   const onSelectItem = React.useCallback(
-    (item: TransactionTreeProps["transactionItem"]) => {
+    (item: TransactionTreeProps["transactionItems"][0]) => {
       setSelectedTransactionItem(item);
     },
     []
@@ -165,7 +127,7 @@ Props) {
 
   return (
     <PageContainer>
-      <pre>{JSON.stringify(roots, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(roots, null, 2)}</pre> */}
       <Sections>
         <Section>
           <Heading>
@@ -212,17 +174,18 @@ Props) {
             <Key>Value: </Key>
             <Value>{formatEth(transactionTrace.item.value)}</Value>
           </KeyValue>
+
+          <Divider />
+
+          <TransactionTree
+            transactionItems={transactionItems}
+            onSelectItem={onSelectItem}
+          />
         </Section>
         <Section>
-          {transactionItem && (
-            <TransactionTree
-              transactionItem={transactionItem}
-              onSelectItem={onSelectItem}
-            />
-          )}
           <Heading2>
-            {selectedTransactionItem.from}
-            <ArrowRight /> {selectedTransactionItem.to}
+            {selectedTransactionItem.message.sender}
+            <ArrowRight /> {selectedTransactionItem.message.contract}
           </Heading2>
           <Paper>
             <Tabs
@@ -232,9 +195,9 @@ Props) {
               textColor="primary"
               centered
             >
-              <Tab label="Decoded">Some thing</Tab>
-              <Tab label="Binary">that is</Tab>
-              <Tab label="Eval">very interesting</Tab>
+              <Tab label="Decoded" />
+              <Tab label="Binary" />
+              <Tab label="Eval" />
             </Tabs>
           </Paper>
           <TabPanel value={value} index={0}>
@@ -295,8 +258,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
-  console.log(roots);
-
   const transactionTraceIndex = blockTrace.txs.findIndex(
     (tx) => tx.txHash === transactionHash
   );
@@ -305,6 +266,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     transactionTraceIndex === -1 ? null : blockTrace.txs[transactionTraceIndex];
 
   return {
-    props: { transactionIndex, transactionTrace, roots },
+    props: { transactionIndex, transactionTrace, transactionItems: roots },
   };
 };

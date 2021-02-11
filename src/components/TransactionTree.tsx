@@ -2,21 +2,28 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
+import { Message } from "@parsiq/block-tracer";
 
-interface Item {
-  from: string;
-  to: string;
+import { Operation } from "src/components/Operation";
+
+export declare type GasRange = readonly [number, number];
+
+type ItemMessage = Omit<Message<never>, "parent"> & {
+  gasRange: GasRange;
   value: string;
-  items: Item[];
+};
+interface Item {
+  message: ItemMessage;
+  children: Item[];
 }
 
 export interface TransactionTreeProps {
-  transactionItem: Item;
-  onSelectItem: (item: TransactionTreeProps["transactionItem"]) => void;
+  transactionItems: Item[];
+  onSelectItem: (item: Item) => void;
 }
 
 export function TransactionTree({
-  transactionItem,
+  transactionItems,
   onSelectItem,
 }: TransactionTreeProps) {
   return (
@@ -24,36 +31,54 @@ export function TransactionTree({
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
     >
-      <p>test</p>
-      <TransactionItem
-        transactionItem={transactionItem}
-        onSelectItem={onSelectItem}
-      />
+      {transactionItems.map((item, i) => {
+        const key = `${JSON.stringify(item.message)}-tree-view-${i}`;
+        return (
+          <TransactionItem
+            key={key}
+            transactionItem={item}
+            onSelectItem={onSelectItem}
+          />
+        );
+      })}
     </TreeView>
   );
 }
 
-interface Props {
+interface TransactionItemProps {
   transactionItem: Item;
-  onSelectItem: (item: TransactionTreeProps["transactionItem"]) => void;
+  onSelectItem: (item: Item) => void;
 }
 
-function TransactionItem({ transactionItem, onSelectItem }: Props) {
-  const nodeId = `${transactionItem.to}/${transactionItem.from}/${transactionItem.value}`;
+function TransactionItem({
+  transactionItem,
+  onSelectItem,
+}: TransactionItemProps) {
+  const nodeId = `${JSON.stringify(transactionItem.message)}-nodeId`;
 
   return (
     <TreeItem
       nodeId={nodeId}
-      label={transactionItem.from}
+      label={
+        <>
+          <Operation operation={transactionItem.message.op} />{" "}
+          {transactionItem.message.contract}
+        </>
+      }
       onClick={() => onSelectItem(transactionItem)}
     >
-      {transactionItem.items.map((item) => (
-        <TransactionItem
-          key={`${item.from}/${item.to}/${item.value}`}
-          transactionItem={item}
-          onSelectItem={onSelectItem}
-        />
-      ))}
+      {transactionItem.children.map((item, index) => {
+        const key = `${JSON.stringify(
+          transactionItem.message
+        )}-transactionItem-${index}`;
+        return (
+          <TransactionItem
+            key={key}
+            transactionItem={item}
+            onSelectItem={onSelectItem}
+          />
+        );
+      })}
     </TreeItem>
   );
 }

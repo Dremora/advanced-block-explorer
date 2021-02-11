@@ -1,13 +1,17 @@
-import styled from "styled-components";
+import Chip, { ChipProps } from "@material-ui/core/Chip";
+import { Message } from "@parsiq/block-tracer";
+import styled, { css } from "styled-components";
 
 import { gray, green, purple, white } from "src/styles/colors";
 import { medium } from "src/styles/typography";
 
+type ItemMessage = Omit<Message<never>, "parent">;
+
 type Props = {
-  operation: string;
+  operation: ItemMessage["op"];
 };
 
-const Root = styled.div<Props>`
+const StyledChip = styled(Chip)<Props & ChipProps>`
   ${medium};
   text-transform: uppercase;
   border-radius: 2px;
@@ -16,17 +20,29 @@ const Root = styled.div<Props>`
   margin: 0 5px;
   font-weight: 700;
 
-  background-color: ${({ operation }) => {
-    if (operation === "CALL") {
-      return purple;
-    } else if (operation === "CREATE") {
-      return green;
-    } else {
-      return gray;
-    }
-  }};
+  &.MuiChip-root {
+    ${({ operation }) => {
+      switch (operation) {
+        case "CALL": {
+          return css`
+            background-color: ${purple};
+          `;
+        }
+        case "CREATE": {
+          return css`
+            background-color: ${green};
+          `;
+        }
+        default: {
+          return css`
+            background-color: ${gray};
+          `;
+        }
+      }
+    }};
+  }
 `;
 
 export const Operation = ({ operation }: Props) => (
-  <Root operation={operation}>{operation}</Root>
+  <StyledChip size="small" label={operation} operation={operation} />
 );
