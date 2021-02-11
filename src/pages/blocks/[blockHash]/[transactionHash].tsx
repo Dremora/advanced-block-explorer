@@ -1,11 +1,18 @@
+import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import Typography from "@material-ui/core/Typography";
+import { ArrowRight } from "@material-ui/icons";
 import { TransactionTrace } from "@parsiq/block-tracer";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/dist/client/router";
+import React from "react";
 import styled from "styled-components";
 
 import { getBlockTrace } from "src/api/api";
 import { Anchor } from "src/components/Anchor";
-import Heading from "src/components/Heading";
+import Heading, { Heading2 } from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
 import {
   TransactionTree,
@@ -48,6 +55,30 @@ const Value = styled.div`
   font-weight: 700;
 `;
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel({ children, value, index, ...other }: TabPanelProps) {
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
 export default function Transaction({
   transactionIndex,
   transactionTrace,
@@ -55,9 +86,6 @@ export default function Transaction({
 Props) {
   const router = useRouter();
   const blockHash = String(router.query.blockHash);
-  if (!transactionTrace) {
-    return <div>Transaction not found</div>;
-  }
 
   const transactionItem: TransactionTreeProps["transactionItem"] = {
     from: "0x7065",
@@ -91,6 +119,31 @@ Props) {
       },
     ],
   };
+
+  const [selectedTransactionItem, setSelectedTransactionItem] = React.useState(
+    transactionItem
+  );
+
+  const onSelectItem = React.useCallback(
+    (item: TransactionTreeProps["transactionItem"]) => {
+      setSelectedTransactionItem(item);
+    },
+    []
+  );
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (
+    event: React.ChangeEvent<Record<string, unknown>>,
+    newValue: number
+  ) => {
+    setValue(newValue);
+  };
+
+  if (!transactionTrace) {
+    return <div>Transaction not found</div>;
+  }
+
   return (
     <PageContainer>
       <Sections>
@@ -142,8 +195,37 @@ Props) {
         </Section>
         <Section>
           {transactionItem && (
-            <TransactionTree transactionItem={transactionItem} />
+            <TransactionTree
+              transactionItem={transactionItem}
+              onSelectItem={onSelectItem}
+            />
           )}
+          <Heading2>
+            {selectedTransactionItem.from}
+            <ArrowRight /> {selectedTransactionItem.to}
+          </Heading2>
+          <Paper>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              centered
+            >
+              <Tab label="Decoded">Some thing</Tab>
+              <Tab label="Binary">that is</Tab>
+              <Tab label="Eval">very interesting</Tab>
+            </Tabs>
+          </Paper>
+          <TabPanel value={value} index={0}>
+            Not implemented yet
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            Item Two
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            Item Three
+          </TabPanel>
         </Section>
       </Sections>
     </PageContainer>
