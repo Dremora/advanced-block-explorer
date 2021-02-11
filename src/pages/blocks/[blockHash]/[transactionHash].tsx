@@ -183,8 +183,9 @@ export default function Transaction({
         </Section>
         <Section>
           <Heading2>
-            {selectedTransactionItem.message.sender}
-            <ArrowRight /> {selectedTransactionItem.message.contract}
+            {formatHashWithEllipsis(selectedTransactionItem.message.sender)}
+            <ArrowRight />{" "}
+            {formatHashWithEllipsis(selectedTransactionItem.message.contract)}
           </Heading2>
           <Paper>
             <Tabs

@@ -5,6 +5,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import { Message } from "@parsiq/block-tracer";
 
 import { Operation } from "src/components/Operation";
+import { formatHashWithEllipsis } from "src/utils";
 
 export declare type GasRange = readonly [number, number];
 
@@ -62,7 +63,7 @@ function TransactionItem({
       label={
         <>
           <Operation operation={transactionItem.message.op} />{" "}
-          {transactionItem.message.contract}
+          {formatHashWithEllipsis(transactionItem.message.contract)}
         </>
       }
       onClick={() => onSelectItem(transactionItem)}
