@@ -27,9 +27,9 @@ export const TransactionsList = ({
         </Tr>
       </Thead>
       <Tbody>
-        {transactions.map((transaction, index) => (
+        {transactions.map((transaction) => (
           <Tr key={transaction.txHash}>
-            {includeIndex && <Td align="right">{index + 1}</Td>}
+            {includeIndex && <Td align="right">{transaction.index}</Td>}
             <Td>?</Td>
             <Td>
               <Anchor
