@@ -1,3 +1,4 @@
+import { Box, Button } from "@material-ui/core";
 import { Radio, TextField } from "@material-ui/core";
 import FormControl, { FormControlProps } from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -54,6 +55,12 @@ export function EvalEvmByteCode() {
         value={evmByteCodeValue}
         onChange={handleEvmByteCodeChange}
       />
+
+      <Box paddingTop={1}>
+        <Button variant="outlined" color="primary">
+          Run
+        </Button>
+      </Box>
     </form>
   );
 }
