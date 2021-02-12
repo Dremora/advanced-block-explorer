@@ -1,6 +1,7 @@
 import { BlockTrace, Message } from "@parsiq/block-tracer";
 import { Decimal } from "decimal.js";
 
+import { cacheGet, cacheSet } from "./cache";
 import { callClient } from "./client";
 
 type OriginalBlockHeader = {
@@ -79,29 +80,41 @@ const gasUsedFromTrace = (trace: BlockTrace) =>
     .reduce((acc, current) => acc.add(current), new Decimal(0))
     .toString();
 
+const getBlockHeader = async (
+  block: OriginalBlockHeader
+): Promise<BlockHeader> => {
+  const key = { method: "getBlockHeader", block };
+
+  const cachedValue = await cacheGet(key);
+  if (cachedValue) {
+    return cachedValue as BlockHeader;
+  }
+
+  const trace = await getBlockTrace(block.hash);
+  const gasCost = gasCostFromTrace(trace);
+  const gasUsed = gasUsedFromTrace(trace);
+
+  const gasPrice = new Decimal(gasCost)
+    .div(new Decimal(gasUsed))
+    .round()
+    .toString();
+
+  const value = {
+    ...block,
+    gasCost,
+    gasPrice,
+  };
+
+  cacheSet(key, value);
+
+  return value;
+};
+
 export async function getLatestBlocks(): Promise<BlockHeader[]> {
   const blockNumber = await getLatestBlock();
   const latestBlock = await getBlockByNumber(blockNumber);
   const blocks = await getBlocksFrom(latestBlock.hash);
-  return Promise.all(
-    blocks.map((block) =>
-      getBlockTrace(block.hash).then((trace) => {
-        const gasCost = gasCostFromTrace(trace);
-        const gasUsed = gasUsedFromTrace(trace);
-
-        const gasPrice = new Decimal(gasCost)
-          .div(new Decimal(gasUsed))
-          .round()
-          .toString();
-
-        return {
-          ...block,
-          gasCost,
-          gasPrice,
-        };
-      })
-    )
-  );
+  return Promise.all(blocks.map(getBlockHeader));
 }
 
 type EthBlock = {
