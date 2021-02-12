@@ -17,23 +17,30 @@ const reverse = (str: string) => str.split("").reverse().join("");
 
 export const formatEth = (
   eth: string,
-  unit: "eth" | "gwei" = "eth"
+  unit: "eth" | "gwei" | "wei" = "eth"
 ): string => {
+  const ethDecimal = new Decimal(eth);
+  if (ethDecimal.greaterThanOrEqualTo(new Decimal("1000000"))) {
+    unit = "gwei";
+  }
+  if (ethDecimal.greaterThanOrEqualTo(new Decimal("1000000000000000"))) {
+    unit = "eth";
+  }
   if (unit === "eth") {
     // return eth;
     return (
-      new Decimal(eth)
+      ethDecimal
         .div(new Decimal("1000000000000000000"))
         .toDecimalPlaces(3)
         .toString() + " Eth"
     );
-  } else {
+  } else if (unit === "gwei") {
     return (
-      new Decimal(eth)
-        .div(new Decimal("1000000000"))
-        .toDecimalPlaces(3)
-        .toString() + " Gwei"
+      ethDecimal.div(new Decimal("1000000000")).toDecimalPlaces(3).toString() +
+      " Gwei"
     );
+  } else {
+    return ethDecimal.toString() + " wei";
   }
   // let reversedChunks = reverse(eth).match(/.{1,3}/g) ?? [];
 
