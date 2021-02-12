@@ -350,7 +350,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       };
       map.set(msg, item);
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (msg.parent.level === 0) {
+      if (msg.parent.level === -1) {
         roots.push(item);
       } else {
         const parent = map.get(msg.parent);
