@@ -15,7 +15,12 @@ import PageContainer from "src/components/PageContainer";
 import { TransactionsList } from "src/components/TransactionsList";
 import { gray } from "src/styles/colors";
 import { body } from "src/styles/typography";
-import { formatEth, formatHashWithEllipsis, gasPercentage } from "src/utils";
+import {
+  formatEth,
+  formatGas,
+  formatHashWithEllipsis,
+  gasPercentage,
+} from "src/utils";
 
 type Props = {
   blockHeader: BlockTrace["header"] | null;
@@ -86,7 +91,7 @@ export default function Block({
           <KeyValue>
             <Key>Gas Used: </Key>
             <Value>
-              {blockHeader.gasUsed} (
+              {formatGas(blockHeader.gasUsed)} (
               {gasPercentage(
                 parseInt(blockHeader.gasUsed),
                 parseInt(blockHeader.gasLimit)

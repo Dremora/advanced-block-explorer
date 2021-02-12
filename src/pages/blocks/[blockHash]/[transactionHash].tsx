@@ -23,7 +23,12 @@ import {
 } from "src/components/TransactionTree";
 import { gray } from "src/styles/colors";
 import { body } from "src/styles/typography";
-import { formatEth, formatHashWithEllipsis, gasPercentage } from "src/utils";
+import {
+  formatEth,
+  formatGas,
+  formatHashWithEllipsis,
+  gasPercentage,
+} from "src/utils";
 
 const ToolPanelWrapper = styled.div`
   padding-top: 25px;
@@ -197,13 +202,13 @@ export default function Transaction({
 
           <KeyValue>
             <Key>Gas Limit: </Key>
-            <Value>{transactionTrace.gasLimit}</Value>
+            <Value>{formatGas(transactionTrace.gasLimit)}</Value>
           </KeyValue>
 
           <KeyValue>
             <Key>Gas Used: </Key>
             <Value>
-              {transactionTrace.gasUsed} (
+              {formatGas(transactionTrace.gasUsed)} (
               {gasPercentage(
                 parseInt(transactionTrace.gasUsed),
                 parseInt(transactionTrace.gasLimit)
