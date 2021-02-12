@@ -340,12 +340,19 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         gasRange: GasRange | undefined;
         value: string | undefined;
       };
+
+      const actualGasRange = gasRange ?? (parent.gasRange as GasRange);
+      // eslint-disable-next-line
+      if (actualGasRange[1] === 21000) {
+        // @ts-ignore
+        actualGasRange[0] = 0;
+      }
       const item: Node = {
         message: {
           ...messageWithoutParent,
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          gasRange: gasRange ?? (parent.gasRange as GasRange),
+          gasRange: actualGasRange,
           value: value ?? "0",
           data: data ?? "",
         },
