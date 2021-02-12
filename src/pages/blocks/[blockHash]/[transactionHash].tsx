@@ -93,6 +93,34 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
   );
 }
 
+interface MessageDataProps {
+  data: string | undefined;
+}
+
+function MessageData({ data }: MessageDataProps) {
+  if (!data) {
+    return null;
+  }
+
+  const firstRow = data.slice(0, 10);
+  const rest = data.slice(10);
+
+  const res = rest.match(/.{32}(?=(.{1,32})+(?!.))|.{1,32}$/g);
+
+  if (!res) {
+    return <p>{firstRow}</p>;
+  }
+
+  return (
+    <>
+      <p>{firstRow}</p>
+      {res.map((r) => (
+        <p key={r}>{r}</p>
+      ))}
+    </>
+  );
+}
+
 export default function Transaction({
   transactionIndex,
   transactionItems,
@@ -112,7 +140,7 @@ export default function Transaction({
     []
   );
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(1);
 
   const handleChange = (
     event: React.ChangeEvent<Record<string, unknown>>,
@@ -206,7 +234,7 @@ export default function Transaction({
             Not implemented yet
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Item Two
+            <MessageData data={selectedTransactionItem.message.data} />
           </TabPanel>
           <TabPanel value={value} index={2}>
             Item Three

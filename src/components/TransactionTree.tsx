@@ -10,7 +10,8 @@ import { formatHashWithEllipsis } from "src/utils";
 
 const StyledTreeItem = styled(TreeItem)`
   &.MuiTreeItem-root {
-    padding-bottom: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
   }
 `;
 
