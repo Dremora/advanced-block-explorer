@@ -14,4 +14,10 @@ export const Heading2 = styled.h2`
   color: ${gray};
 `;
 
+export const Heading3 = styled.h3`
+  font-size: 18px;
+  line-height: 24px;
+  color: ${gray};
+`;
+
 export default Heading;

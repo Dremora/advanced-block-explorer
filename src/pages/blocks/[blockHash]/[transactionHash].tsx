@@ -1,4 +1,4 @@
-import { Box, Divider, Paper, Tab, Tabs } from "@material-ui/core";
+import { Box, Divider, Paper, Tab, Tabs, TextField } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { ArrowRight } from "@material-ui/icons";
 import {
@@ -14,7 +14,7 @@ import styled from "styled-components";
 
 import { getBlockTrace } from "src/api/api";
 import { Anchor } from "src/components/Anchor";
-import Heading, { Heading2 } from "src/components/Heading";
+import Heading, { Heading2, Heading3 } from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
 import {
   TransactionTree,
@@ -112,12 +112,17 @@ function MessageData({ data }: MessageDataProps) {
   }
 
   return (
-    <>
-      <p>{firstRow}</p>
-      {res.map((r) => (
-        <p key={r}>{r}</p>
-      ))}
-    </>
+    <p>
+      <>
+        {firstRow}
+        {res.map((r) => (
+          <React.Fragment key={r}>
+            <br />
+            {r}
+          </React.Fragment>
+        ))}
+      </>
+    </p>
   );
 }
 
@@ -234,6 +239,7 @@ export default function Transaction({
             Not implemented yet
           </TabPanel>
           <TabPanel value={value} index={1}>
+            <Heading3>Data</Heading3>
             <MessageData data={selectedTransactionItem.message.data} />
           </TabPanel>
           <TabPanel value={value} index={2}>
