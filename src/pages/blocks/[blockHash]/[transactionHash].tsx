@@ -293,7 +293,7 @@ export default function Transaction({
               <TabPanel value={tabValue} index={2}>
                 <EvalEvmByteCode
                   gasRange={selectedTransactionItem.message.gasRange}
-                  transactionIndex={transactionIndex}
+                  transactionIndex={transactionIndex - 1}
                 />
               </TabPanel>
             </Paper>
