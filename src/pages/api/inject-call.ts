@@ -6,7 +6,7 @@ import { injectCallBulk } from "src/api/api";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const blockHash = req.body.blockHash as string;
   const txIndex = parseInt(req.body.txIndex as string);
-  const gasTimestamp = parseInt(req.body.gasTimeStamp as string);
+  const gasTimestamp = parseInt(req.body.gasTimestamp as string);
   const code = req.body.code as string;
   const credit = parseInt(req.body.credit as string);
 
