@@ -44,10 +44,11 @@ export async function injectCallBulk(
       ],
     },
   ];
-  const result = await callClient("debug_injectCallBulk", [
-    blockHash,
-    JSON.stringify(txArr),
-  ]);
+  const result = await callClient(
+    "debug_injectCallBulk",
+    [blockHash, JSON.stringify(txArr)],
+    { cache: false }
+  );
 
   return result;
 }

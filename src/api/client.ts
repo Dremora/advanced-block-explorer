@@ -15,7 +15,7 @@ export const callClient = async (
 ): Promise<unknown> => {
   const { cache = true } = options;
 
-  console.log(useCache, process.env.REDIS_URL);
+  console.log(useCache && cache, process.env.REDIS_URL);
 
   const key = { name, args };
 
@@ -49,6 +49,7 @@ export const callClient = async (
 };
 
 callClient.debug = async (name: string, args: unknown[]): Promise<unknown> => {
+  console.log(JSON.stringify({ name, args }, null, 2));
   const result = await callClient(name, args);
   console.log(JSON.stringify(result, null, 4));
   return result;
