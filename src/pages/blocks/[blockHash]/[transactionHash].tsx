@@ -100,6 +100,12 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
   );
 }
 
+const DataWrapper = styled.div`
+  display: flex;
+  overflow: scroll;
+  max-height: 350px;
+`;
+
 interface MessageDataProps {
   data: string | undefined;
 }
@@ -119,17 +125,19 @@ function MessageData({ data }: MessageDataProps) {
   }
 
   return (
-    <pre>
-      <>
-        {firstRow}
-        {res.map((r) => (
-          <React.Fragment key={r}>
-            <br />
-            {r}
-          </React.Fragment>
-        ))}
-      </>
-    </pre>
+    <DataWrapper>
+      <pre>
+        <>
+          {firstRow}
+          {res.map((r) => (
+            <React.Fragment key={r}>
+              <br />
+              {r}
+            </React.Fragment>
+          ))}
+        </>
+      </pre>
+    </DataWrapper>
   );
 }
 
@@ -228,74 +236,78 @@ export default function Transaction({
         <Section>
           <ToolPanelWrapper>
             <Paper>
-              <Heading2>
-                {formatHashWithEllipsis(selectedTransactionItem.message.sender)}
-                <ArrowRight />{" "}
-                {formatHashWithEllipsis(
-                  selectedTransactionItem.message.contract
-                )}
-              </Heading2>
-              <Paper>
-                <Tabs
-                  value={tabValue}
-                  onChange={handleTabChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  centered
-                >
-                  <Tab label="Decoded" />
-                  <Tab label="Binary" />
-                  <Tab label="Eval" />
-                </Tabs>
-              </Paper>
-              <TabPanel value={tabValue} index={0}>
-                Not implemented yet
-              </TabPanel>
-              <TabPanel value={tabValue} index={1}>
-                <KeyValue>
-                  <Key>From: </Key>
-                  <Value>
-                    {formatHashWithEllipsis(
-                      selectedTransactionItem.message.sender
-                    )}
-                  </Value>
-                </KeyValue>
-                <KeyValue>
-                  <Key>To: </Key>
-                  <Value>
-                    {formatHashWithEllipsis(
-                      selectedTransactionItem.message.contract
-                    )}
-                  </Value>
-                </KeyValue>
+              <Box padding={1}>
+                <Heading2>
+                  {formatHashWithEllipsis(
+                    selectedTransactionItem.message.sender
+                  )}
+                  <ArrowRight />{" "}
+                  {formatHashWithEllipsis(
+                    selectedTransactionItem.message.contract
+                  )}
+                </Heading2>
+                <Paper>
+                  <Tabs
+                    value={tabValue}
+                    onChange={handleTabChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                  >
+                    <Tab label="Decoded" />
+                    <Tab label="Binary" />
+                    <Tab label="Eval" />
+                  </Tabs>
+                </Paper>
+                <TabPanel value={tabValue} index={0}>
+                  Not implemented yet
+                </TabPanel>
+                <TabPanel value={tabValue} index={1}>
+                  <KeyValue>
+                    <Key>From: </Key>
+                    <Value>
+                      {formatHashWithEllipsis(
+                        selectedTransactionItem.message.sender
+                      )}
+                    </Value>
+                  </KeyValue>
+                  <KeyValue>
+                    <Key>To: </Key>
+                    <Value>
+                      {formatHashWithEllipsis(
+                        selectedTransactionItem.message.contract
+                      )}
+                    </Value>
+                  </KeyValue>
 
-                <KeyValue>
-                  <Key>Effective: </Key>
-                  <Value>
-                    {selectedTransactionItem.message.effective ? "✅" : "❌"}
-                  </Value>
-                </KeyValue>
+                  <KeyValue>
+                    <Key>Effective: </Key>
+                    <Value>
+                      {selectedTransactionItem.message.effective ? "✅" : "❌"}
+                    </Value>
+                  </KeyValue>
 
-                <KeyValue>
-                  <Key>Value: </Key>
-                  <Value>
-                    {formatEth(selectedTransactionItem.message.value)}
-                  </Value>
-                </KeyValue>
+                  <KeyValue>
+                    <Key>Value: </Key>
+                    <Value>
+                      {formatEth(selectedTransactionItem.message.value)}
+                    </Value>
+                  </KeyValue>
 
-                <Box paddingTop={2} />
+                  <Box paddingTop={2} />
 
-                <Divider />
+                  <Divider />
 
-                <Heading3>Data</Heading3>
-                <MessageData data={selectedTransactionItem.message.data} />
-              </TabPanel>
-              <TabPanel value={tabValue} index={2}>
-                <EvalEvmByteCode
-                  gasRange={selectedTransactionItem.message.gasRange}
-                  transactionIndex={transactionIndex - 1}
-                />
-              </TabPanel>
+                  <Heading3>Data</Heading3>
+                  <MessageData data={selectedTransactionItem.message.data} />
+                </TabPanel>
+                <TabPanel value={tabValue} index={2}>
+                  <EvalEvmByteCode
+                    gasRange={selectedTransactionItem.message.gasRange}
+                    transactionIndex={transactionIndex - 1}
+                  />
+                </TabPanel>
+              </Box>
             </Paper>
           </ToolPanelWrapper>
         </Section>
