@@ -7,60 +7,67 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import React from "react";
 import styled from "styled-components";
 
+import { useEval } from "src/hooks/useEval";
+
+import { GasRange } from "./TransactionTree";
+
 const StyledFormControl = styled(FormControl)<FormControlProps>`
   & .MuiFormGroup-root {
     flex-direction: row;
   }
 `;
 
-export function EvalEvmByteCode() {
-  const [radioValue, setRadioValue] = React.useState("before");
+type Props = {
+  gasRange: GasRange;
+  transactionIndex: number;
+};
 
-  const handleRadioChange = React.useCallback(
+export function EvalEvmByteCode({ gasRange, transactionIndex }: Props) {
+  const evalData = useEval(transactionIndex, gasRange[0]);
+
+  const handleCreditChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setRadioValue((event.target as HTMLInputElement).value);
+      evalData.setCredit(parseInt((event.target as HTMLInputElement).value));
     },
-    [setRadioValue]
+    [evalData]
   );
 
-  const [evmByteCodeValue, setEvmByteCodeValue] = React.useState<string>("");
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    evalData.setGasTimestamp(
+      parseInt((event.target as HTMLInputElement).value)
+    );
+  };
 
-  const handleEvmByteCodeChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setEvmByteCodeValue((event.target as HTMLInputElement).value);
-    },
-    [setEvmByteCodeValue]
-  );
-
-  const [codeValue, setCodeValue] = React.useState<string>("");
-
-  const handleCodeValue = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCodeValue((event.target as HTMLInputElement).value);
-    },
-    [setCodeValue]
-  );
+  const handleEvmByteCodeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    evalData.setCode((event.target as HTMLInputElement).value);
+  };
 
   return (
     <form
       noValidate
       autoComplete="off"
       id="eval-evm-byte-form"
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log("submit");
-      }}
+      onSubmit={evalData.onSubmit}
     >
       <StyledFormControl>
         <FormLabel component="legend">Gas value</FormLabel>
         <RadioGroup
-          aria-label="gender"
           name="gender1"
-          value={radioValue}
+          value={evalData.gasTimestamp.toString()}
           onChange={handleRadioChange}
         >
-          <FormControlLabel value="before" control={<Radio />} label="Before" />
-          <FormControlLabel value="after" control={<Radio />} label="After" />
+          <FormControlLabel
+            value={gasRange[0].toString()}
+            control={<Radio />}
+            label={`Before: ${gasRange[0]}`}
+          />
+          <FormControlLabel
+            value={gasRange[1].toString()}
+            control={<Radio />}
+            label={`After: ${gasRange[1]}`}
+          />
         </RadioGroup>
       </StyledFormControl>
 
@@ -71,7 +78,7 @@ export function EvalEvmByteCode() {
         fullWidth
         size="medium"
         variant="filled"
-        value={evmByteCodeValue}
+        value={evalData.code}
         onChange={handleEvmByteCodeChange}
         rows={10}
       />
@@ -80,12 +87,12 @@ export function EvalEvmByteCode() {
 
       <TextField
         id="evm-code-2"
-        label="Code"
+        label="Credit"
         fullWidth
         size="medium"
         variant="filled"
-        value={codeValue}
-        onChange={handleCodeValue}
+        value={evalData.credit}
+        onChange={handleCreditChange}
       />
 
       <Box paddingTop={1}>
@@ -98,6 +105,8 @@ export function EvalEvmByteCode() {
           Run
         </Button>
       </Box>
+
+      <pre>{evalData.data}</pre>
     </form>
   );
 }
