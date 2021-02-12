@@ -24,6 +24,33 @@ export async function getBlockTrace(blockHash: string): Promise<BlockTrace> {
   return result as BlockTrace;
 }
 
+export async function injectCallBulk(
+  blockHash: string,
+  txIndex: number,
+  gasTimeStamp: number,
+  code: string,
+  credit: number
+): Promise<unknown> {
+  const txArr = [
+    {
+      txIndex,
+      levels: [
+        {
+          gasTimeStamp,
+          code,
+          credit,
+        },
+      ],
+    },
+  ];
+  const result = await callClient("debug_injectCallBulk", [
+    blockHash,
+    JSON.stringify(txArr),
+  ]);
+
+  return result;
+}
+
 export async function getLatestBlock(): Promise<number> {
   const result = await callClient("eth_blockNumber", [], {
     cache: false,
