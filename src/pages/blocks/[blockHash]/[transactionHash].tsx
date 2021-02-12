@@ -326,6 +326,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const map = new Map<Message<never>, Node>();
   const roots: Node[] = [];
   for (const transaction of traceBlock(blockTrace)) {
+    if (transaction.hash !== transactionHash) {
+      continue;
+    }
     for (const { msg } of traceTx(transaction)) {
       const {
         parent,
