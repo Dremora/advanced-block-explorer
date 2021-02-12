@@ -1,4 +1,4 @@
-import { BlockTrace } from "@parsiq/block-tracer";
+import { BlockTrace, Message } from "@parsiq/block-tracer";
 import { Decimal } from "decimal.js";
 
 import { callClient } from "./client";
@@ -119,7 +119,7 @@ export async function getBlockByNumber(blockNumber: number): Promise<EthBlock> {
 
 export type TransactionInfo = {
   txHash: string;
-  operation: string;
+  operation: Message<never>["op"] | "DEPLOYMENT" | "TRANSFER";
   index: number;
   success: boolean;
   gasUsed: string;
@@ -135,9 +135,9 @@ export function transactionsInfoFromBlock(
       gasUsed: tx.gasUsed,
       operation:
         tx.item.data === "0x" && !tx.item.items
-          ? "TRANSFER"
+          ? ("TRANSFER" as const)
           : tx.item.address === "0x"
-          ? "DEPLOYMENT"
+          ? ("DEPLOYMENT" as const)
           : tx.item.op,
       success: tx.item.result?.success ?? false,
     }))
