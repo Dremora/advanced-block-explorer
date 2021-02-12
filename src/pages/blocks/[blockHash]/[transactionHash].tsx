@@ -7,6 +7,7 @@ import {
   traceTx,
   TransactionTrace,
 } from "@parsiq/block-tracer";
+import Decimal from "decimal.js";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
@@ -225,6 +226,17 @@ export default function Transaction({
           <KeyValue>
             <Key>Value: </Key>
             <Value>{formatEth(transactionTrace.item.value)}</Value>
+          </KeyValue>
+
+          <KeyValue>
+            <Key>Fees: </Key>
+            <Value>
+              {formatEth(
+                new Decimal(transactionTrace.gasPrice)
+                  .mul(new Decimal(transactionTrace.gasUsed))
+                  .toString()
+              )}
+            </Value>
           </KeyValue>
 
           <Box paddingY={2} />
