@@ -329,7 +329,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     if (transaction.hash !== transactionHash) {
       continue;
     }
-    for (const { msg } of traceTx(transaction)) {
+    for (const { msg } of traceTx(transaction, { includeFailed: true })) {
       const {
         parent,
         gasRange,
