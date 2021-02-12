@@ -23,9 +23,7 @@ export function EvalEvmByteCode() {
     [setRadioValue]
   );
 
-  const [evmByteCodeValue, setEvmByteCodeValue] = React.useState<
-    string | undefined
-  >();
+  const [evmByteCodeValue, setEvmByteCodeValue] = React.useState<string>("");
 
   const handleEvmByteCodeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +32,7 @@ export function EvalEvmByteCode() {
     [setEvmByteCodeValue]
   );
 
-  const [codeValue, setCodeValue] = React.useState<string | undefined>();
+  const [codeValue, setCodeValue] = React.useState<string>("");
 
   const handleCodeValue = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +46,8 @@ export function EvalEvmByteCode() {
       noValidate
       autoComplete="off"
       id="eval-evm-byte-form"
-      onSubmit={() => {
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         console.log("submit");
       }}
     >
