@@ -31,6 +31,9 @@ export const formatEth = (
   eth: string,
   unit: "eth" | "gwei" | "wei" = "eth"
 ): string => {
+  if (eth === "NaN") {
+    return "0 wei";
+  }
   const ethDecimal = new Decimal(eth);
   if (ethDecimal.greaterThanOrEqualTo(new Decimal("1000000"))) {
     unit = "gwei";
