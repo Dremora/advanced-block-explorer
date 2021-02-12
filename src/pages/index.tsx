@@ -5,9 +5,9 @@ import useSWR from "swr";
 import {
   BlockHeader,
   getBlockByNumber,
-  getBlocksFrom,
   getBlockTrace,
   getLatestBlock,
+  getLatestBlocks,
   TransactionInfo,
   transactionsInfoFromBlock,
 } from "src/api/api";
@@ -16,7 +16,7 @@ import Heading from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
 import { Table, Tbody, Td, Th, Thead, Tr } from "src/components/Table";
 import { TransactionsList } from "src/components/TransactionsList";
-import { formatHashWithEllipsis } from "src/utils";
+import { formatEth, formatHashWithEllipsis } from "src/utils";
 import { fetcher } from "src/utils/fetcher";
 
 type Props = {
@@ -70,7 +70,7 @@ export default function Home({
                       <span>{formatHashWithEllipsis(block.hash)}</span>
                     </Anchor>
                   </Td>
-                  <Td>{block.gasPrice} </Td>
+                  <Td>{formatEth(block.gasPrice)} </Td>
                 </Tr>
               ))}
             </Tbody>
@@ -96,7 +96,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async function () {
 
   return {
     props: {
-      blocks: await getBlocksFrom(latestBlock.hash),
+      blocks: await getLatestBlocks(),
       transactionsBlockHash: latestBlock.hash,
       transactions: await getBlockTrace(latestBlock.hash)
         .then(transactionsInfoFromBlock)

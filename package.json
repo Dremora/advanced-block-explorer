@@ -14,6 +14,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@parsiq/block-tracer": "^0.2.5",
     "chroma-js": "^2.1.0",
+    "decimal.js": "^10.2.1",
     "next": "10.0.6",
     "node-jsonrpc-client": "^1.0.3",
     "react": "17.0.1",

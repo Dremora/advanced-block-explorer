@@ -1,21 +1,21 @@
 import { BlockTrace } from "@parsiq/block-tracer";
+import { Decimal } from "decimal.js";
 
 import { callClient } from "./client";
 
-export type BlockHeader = {
+type OriginalBlockHeader = {
   number: number;
   hash: string;
-  gasPrice: string;
   parentHash: string;
 };
 
 export async function getBlocksFrom(
   hash: string,
   count = 10
-): Promise<BlockHeader[]> {
+): Promise<OriginalBlockHeader[]> {
   const result = await callClient("eth_blockHeadersFromHash", [hash, count]);
 
-  return result as BlockHeader[];
+  return result as OriginalBlockHeader[];
 }
 
 export async function getBlockTrace(blockHash: string): Promise<BlockTrace> {
@@ -32,10 +32,49 @@ export async function getLatestBlock(): Promise<number> {
   return parseInt(result as string, 16);
 }
 
+export type BlockHeader = {
+  number: number;
+  hash: string;
+  gasPrice: string;
+  gasCost: string;
+  parentHash: string;
+};
+
+const gasCostFromTrace = (trace: BlockTrace) =>
+  trace.txs
+    .map((tx) => new Decimal(tx.gasUsed).mul(new Decimal(tx.gasPrice)))
+    .reduce((acc, current) => acc.add(current), new Decimal(0))
+    .toString();
+
+const gasUsedFromTrace = (trace: BlockTrace) =>
+  trace.txs
+    .map((tx) => new Decimal(tx.gasUsed))
+    .reduce((acc, current) => acc.add(current), new Decimal(0))
+    .toString();
+
 export async function getLatestBlocks(): Promise<BlockHeader[]> {
   const blockNumber = await getLatestBlock();
   const latestBlock = await getBlockByNumber(blockNumber);
-  return getBlocksFrom(latestBlock.hash);
+  const blocks = await getBlocksFrom(latestBlock.hash);
+  return Promise.all(
+    blocks.map((block) =>
+      getBlockTrace(block.hash).then((trace) => {
+        const gasCost = gasCostFromTrace(trace);
+        const gasUsed = gasUsedFromTrace(trace);
+
+        const gasPrice = new Decimal(gasCost)
+          .div(new Decimal(gasUsed))
+          .round()
+          .toString();
+
+        return {
+          ...block,
+          gasCost,
+          gasPrice,
+        };
+      })
+    )
+  );
 }
 
 type EthBlock = {
