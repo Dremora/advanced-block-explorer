@@ -16,19 +16,32 @@ const StyledFormControl = styled(FormControl)<FormControlProps>`
 export function EvalEvmByteCode() {
   const [radioValue, setRadioValue] = React.useState("before");
 
-  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRadioValue((event.target as HTMLInputElement).value);
-  };
+  const handleRadioChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setRadioValue((event.target as HTMLInputElement).value);
+    },
+    [setRadioValue]
+  );
 
   const [evmByteCodeValue, setEvmByteCodeValue] = React.useState<
     string | undefined
   >();
 
-  const handleEvmByteCodeChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setEvmByteCodeValue((event.target as HTMLInputElement).value);
-  };
+  const handleEvmByteCodeChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setEvmByteCodeValue((event.target as HTMLInputElement).value);
+    },
+    [setEvmByteCodeValue]
+  );
+
+  const [codeValue, setCodeValue] = React.useState<string | undefined>();
+
+  const handleCodeValue = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCodeValue((event.target as HTMLInputElement).value);
+    },
+    [setCodeValue]
+  );
 
   return (
     <form
@@ -61,6 +74,19 @@ export function EvalEvmByteCode() {
         variant="filled"
         value={evmByteCodeValue}
         onChange={handleEvmByteCodeChange}
+        rows={10}
+      />
+
+      <Box paddingTop={2} />
+
+      <TextField
+        id="evm-code-2"
+        label="Code"
+        fullWidth
+        size="medium"
+        variant="filled"
+        value={codeValue}
+        onChange={handleCodeValue}
       />
 
       <Box paddingTop={1}>
