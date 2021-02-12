@@ -341,6 +341,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         value: string | undefined;
       };
 
+      // @ts-ignore
       const actualGasRange = gasRange ?? (parent.gasRange as GasRange);
       // eslint-disable-next-line
       if (actualGasRange[1] === 21000) {
