@@ -81,7 +81,7 @@ const gasUsedFromTrace = (trace: BlockTrace) =>
     .reduce((acc, current) => acc.add(current), new Decimal(0))
     .toString();
 
-const getBlockHeader = async (
+export const getBlockHeader = async (
   block: OriginalBlockHeader
 ): Promise<BlockHeader> => {
   const key = { method: "getBlockHeader", block };

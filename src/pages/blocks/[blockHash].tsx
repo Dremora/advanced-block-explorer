@@ -1,8 +1,10 @@
 import { BlockTrace } from "@parsiq/block-tracer";
+import Decimal from "decimal.js";
 import { GetServerSideProps } from "next";
 import styled from "styled-components";
 
 import {
+  getBlockHeader,
   getBlockTrace,
   TransactionInfo,
   transactionsInfoFromBlock,
@@ -19,6 +21,8 @@ type Props = {
   blockHeader: BlockTrace["header"] | null;
   rewards: BlockTrace["rewards"];
   transactions: TransactionInfo[];
+  ethFees: string;
+  ethEmission: string;
 };
 
 const Sections = styled.div`
@@ -48,7 +52,13 @@ const Value = styled.div`
   font-weight: 700;
 `;
 
-export default function Block({ blockHeader, rewards, transactions }: Props) {
+export default function Block({
+  blockHeader,
+  rewards,
+  transactions,
+  ethFees,
+  ethEmission,
+}: Props) {
   if (!blockHeader) {
     return <div>Block not found</div>;
   }
@@ -87,12 +97,12 @@ export default function Block({ blockHeader, rewards, transactions }: Props) {
 
           <KeyValue>
             <Key>Eth Emission: </Key>
-            <Value>??</Value>
+            <Value>{formatEth(ethEmission)}</Value>
           </KeyValue>
 
           <KeyValue>
             <Key>Eth Fees: </Key>
-            <Value>??</Value>
+            <Value>{formatEth(ethFees)}</Value>
           </KeyValue>
 
           <KeyValue>
@@ -132,11 +142,31 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const blockHash = String(context.query.blockHash);
   const blockTrace = await getBlockTrace(blockHash);
 
+  const blockHeader = await getBlockHeader({
+    number: blockTrace.header.blockNumber,
+    hash: blockHash,
+    parentHash: blockTrace.header.parentBlockHash,
+  });
+
+  const ethFees = blockHeader.gasCost;
+
+  const ethEmission = blockTrace.rewards
+    .reduce(
+      (acc, current) => new Decimal(current.reward).add(acc),
+      new Decimal("0")
+    )
+    .minus(new Decimal(ethFees))
+    .toString();
+
+  console.log({ ethEmission });
+
   return {
     props: {
       blockHeader: blockTrace.header,
       rewards: blockTrace.rewards,
       transactions: transactionsInfoFromBlock(blockTrace),
+      ethFees,
+      ethEmission,
     },
   };
 };
