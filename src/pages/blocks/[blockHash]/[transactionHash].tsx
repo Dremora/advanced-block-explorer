@@ -370,6 +370,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  roots[0].message.gasRange[0] = 0;
+
   const transactionTraceIndex = blockTrace.txs.findIndex(
     (tx) => tx.txHash === transactionHash
   );
