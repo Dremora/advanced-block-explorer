@@ -68,6 +68,7 @@ module.exports = {
       'error',
       { classes: false, functions: false }
     ],
+    '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     'no-restricted-globals': ['error'].concat(restrictedGlobals),
     'import/no-cycle': 'error',
