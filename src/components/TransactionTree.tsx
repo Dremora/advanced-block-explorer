@@ -3,9 +3,16 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
 import { Message } from "@parsiq/block-tracer";
+import styled from "styled-components";
 
 import { Operation } from "src/components/Operation";
 import { formatHashWithEllipsis } from "src/utils";
+
+const StyledTreeItem = styled(TreeItem)`
+  &.MuiTreeItem-root {
+    padding-bottom: 3px;
+  }
+`;
 
 export declare type GasRange = readonly [number, number];
 
@@ -58,7 +65,7 @@ function TransactionItem({
   const nodeId = `${JSON.stringify(transactionItem.message)}-nodeId`;
 
   return (
-    <TreeItem
+    <StyledTreeItem
       nodeId={nodeId}
       label={
         <>
@@ -80,6 +87,6 @@ function TransactionItem({
           />
         );
       })}
-    </TreeItem>
+    </StyledTreeItem>
   );
 }

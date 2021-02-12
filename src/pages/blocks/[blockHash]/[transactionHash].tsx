@@ -174,7 +174,9 @@ export default function Transaction({
             <Value>{formatEth(transactionTrace.item.value)}</Value>
           </KeyValue>
 
+          <Box paddingY={2} />
           <Divider />
+          <Box paddingY={2} />
 
           <TransactionTree
             transactionItems={transactionItems}
