@@ -1,4 +1,4 @@
-import { Box, Divider, Paper, Tab, Tabs, TextField } from "@material-ui/core";
+import { Box, Divider, Paper, Tab, Tabs } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { ArrowRight } from "@material-ui/icons";
 import {
@@ -239,6 +239,37 @@ export default function Transaction({
             Not implemented yet
           </TabPanel>
           <TabPanel value={value} index={1}>
+            <KeyValue>
+              <Key>From: </Key>
+              <Value>
+                {formatHashWithEllipsis(selectedTransactionItem.message.sender)}
+              </Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>To: </Key>
+              <Value>
+                {formatHashWithEllipsis(
+                  selectedTransactionItem.message.contract
+                )}
+              </Value>
+            </KeyValue>
+
+            <KeyValue>
+              <Key>Effective: </Key>
+              <Value>
+                {selectedTransactionItem.message.effective ? "True" : "False"}
+              </Value>
+            </KeyValue>
+
+            <KeyValue>
+              <Key>Value: </Key>
+              <Value>{formatEth(selectedTransactionItem.message.value)}</Value>
+            </KeyValue>
+
+            <Box paddingTop={2} />
+
+            <Divider />
+
             <Heading3>Data</Heading3>
             <MessageData data={selectedTransactionItem.message.data} />
           </TabPanel>
