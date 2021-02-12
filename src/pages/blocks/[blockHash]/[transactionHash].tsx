@@ -119,7 +119,7 @@ function MessageData({ data }: MessageDataProps) {
   }
 
   return (
-    <p>
+    <pre>
       <>
         {firstRow}
         {res.map((r) => (
@@ -129,7 +129,7 @@ function MessageData({ data }: MessageDataProps) {
           </React.Fragment>
         ))}
       </>
-    </p>
+    </pre>
   );
 }
 
