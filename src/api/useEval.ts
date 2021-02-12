@@ -1,7 +1,10 @@
+import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { useMutation } from "react-query";
 
-export const useEval = (blockHash: string, txIndex: number) => {
+export const useEval = (txIndex: number) => {
+  const router = useRouter();
+  const blockHash = String(router.query.blockHash);
   const [state, setState] = useState({
     gasTimestamp: 0,
     code: "",

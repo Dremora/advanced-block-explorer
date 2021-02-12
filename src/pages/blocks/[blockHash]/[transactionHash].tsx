@@ -258,7 +258,7 @@ export default function Transaction({
             <KeyValue>
               <Key>Effective: </Key>
               <Value>
-                {selectedTransactionItem.message.effective ? "True" : "False"}
+                {selectedTransactionItem.message.effective ? "✅" : "❌"}
               </Value>
             </KeyValue>
 

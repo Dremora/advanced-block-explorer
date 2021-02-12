@@ -9,7 +9,7 @@ import { medium } from "src/styles/typography";
 type ItemMessage = Omit<Message<never>, "parent">;
 
 type Props = {
-  operation: ItemMessage["op"];
+  operation: ItemMessage["op"] | "DEPLOYMENT" | "TRANSFER";
 };
 
 const StyledChip = styled(Chip)<Props & ChipProps>`
