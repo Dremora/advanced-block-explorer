@@ -14,6 +14,7 @@ import styled from "styled-components";
 
 import { getBlockTrace } from "src/api/api";
 import { Anchor } from "src/components/Anchor";
+import { EvalEvmByteCode } from "src/components/EvalEvmByteCode";
 import Heading, { Heading2, Heading3 } from "src/components/Heading";
 import PageContainer from "src/components/PageContainer";
 import {
@@ -23,7 +24,12 @@ import {
 import { gray } from "src/styles/colors";
 import { body } from "src/styles/typography";
 import { formatEth, formatHashWithEllipsis, gasPercentage } from "src/utils";
-import { EvalEvmByteCode } from "src/components/EvalEvmByteCode";
+
+const ToolPanelWrapper = styled.div`
+  padding-top: 25px;
+  position: sticky;
+  top: 0;
+`;
 
 export declare type GasRange = readonly [number, number];
 
@@ -209,7 +215,9 @@ export default function Transaction({
           </KeyValue>
 
           <Box paddingY={2} />
+
           <Divider />
+
           <Box paddingY={2} />
 
           <TransactionTree
@@ -218,65 +226,75 @@ export default function Transaction({
           />
         </Section>
         <Section>
-          <Heading2>
-            {formatHashWithEllipsis(selectedTransactionItem.message.sender)}
-            <ArrowRight />{" "}
-            {formatHashWithEllipsis(selectedTransactionItem.message.contract)}
-          </Heading2>
-          <Paper>
-            <Tabs
-              value={tabValue}
-              onChange={handleTabChange}
-              indicatorColor="primary"
-              textColor="primary"
-              centered
-            >
-              <Tab label="Decoded" />
-              <Tab label="Binary" />
-              <Tab label="Eval" />
-            </Tabs>
-          </Paper>
-          <TabPanel value={tabValue} index={0}>
-            Not implemented yet
-          </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            <KeyValue>
-              <Key>From: </Key>
-              <Value>
+          <ToolPanelWrapper>
+            <Paper>
+              <Heading2>
                 {formatHashWithEllipsis(selectedTransactionItem.message.sender)}
-              </Value>
-            </KeyValue>
-            <KeyValue>
-              <Key>To: </Key>
-              <Value>
+                <ArrowRight />{" "}
                 {formatHashWithEllipsis(
                   selectedTransactionItem.message.contract
                 )}
-              </Value>
-            </KeyValue>
+              </Heading2>
+              <Paper>
+                <Tabs
+                  value={tabValue}
+                  onChange={handleTabChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  centered
+                >
+                  <Tab label="Decoded" />
+                  <Tab label="Binary" />
+                  <Tab label="Eval" />
+                </Tabs>
+              </Paper>
+              <TabPanel value={tabValue} index={0}>
+                Not implemented yet
+              </TabPanel>
+              <TabPanel value={tabValue} index={1}>
+                <KeyValue>
+                  <Key>From: </Key>
+                  <Value>
+                    {formatHashWithEllipsis(
+                      selectedTransactionItem.message.sender
+                    )}
+                  </Value>
+                </KeyValue>
+                <KeyValue>
+                  <Key>To: </Key>
+                  <Value>
+                    {formatHashWithEllipsis(
+                      selectedTransactionItem.message.contract
+                    )}
+                  </Value>
+                </KeyValue>
 
-            <KeyValue>
-              <Key>Effective: </Key>
-              <Value>
-                {selectedTransactionItem.message.effective ? "✅" : "❌"}
-              </Value>
-            </KeyValue>
+                <KeyValue>
+                  <Key>Effective: </Key>
+                  <Value>
+                    {selectedTransactionItem.message.effective ? "✅" : "❌"}
+                  </Value>
+                </KeyValue>
 
-            <KeyValue>
-              <Key>Value: </Key>
-              <Value>{formatEth(selectedTransactionItem.message.value)}</Value>
-            </KeyValue>
+                <KeyValue>
+                  <Key>Value: </Key>
+                  <Value>
+                    {formatEth(selectedTransactionItem.message.value)}
+                  </Value>
+                </KeyValue>
 
-            <Box paddingTop={2} />
+                <Box paddingTop={2} />
 
-            <Divider />
+                <Divider />
 
-            <Heading3>Data</Heading3>
-            <MessageData data={selectedTransactionItem.message.data} />
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <EvalEvmByteCode />
-          </TabPanel>
+                <Heading3>Data</Heading3>
+                <MessageData data={selectedTransactionItem.message.data} />
+              </TabPanel>
+              <TabPanel value={tabValue} index={2}>
+                <EvalEvmByteCode />
+              </TabPanel>
+            </Paper>
+          </ToolPanelWrapper>
         </Section>
       </Sections>
     </PageContainer>
