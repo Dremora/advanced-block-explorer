@@ -1,4 +1,4 @@
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, Divider } from "@material-ui/core";
 import { Radio, TextField } from "@material-ui/core";
 import FormControl, { FormControlProps } from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -7,6 +7,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import React from "react";
 import styled from "styled-components";
 
+import { Heading3 } from "src/components/Heading";
 import { useEval } from "src/hooks/useEval";
 
 import { GasRange } from "./TransactionTree";
@@ -15,6 +16,12 @@ const StyledFormControl = styled(FormControl)<FormControlProps>`
   & .MuiFormGroup-root {
     flex-direction: row;
   }
+`;
+
+const ResultWrapper = styled.div`
+  display: flex;
+  overflow: scroll;
+  max-height: 250px;
 `;
 
 type Props = {
@@ -106,7 +113,19 @@ export function EvalEvmByteCode({ gasRange, transactionIndex }: Props) {
         </Button>
       </Box>
 
-      <pre>{evalData.data}</pre>
+      {evalData.data && (
+        <>
+          <Box paddingTop={1} />
+          <Divider />
+          <Box paddingTop={1} />
+
+          <Heading3>Result</Heading3>
+
+          <ResultWrapper>
+            <pre>{evalData.data}</pre>
+          </ResultWrapper>
+        </>
+      )}
     </form>
   );
 }
