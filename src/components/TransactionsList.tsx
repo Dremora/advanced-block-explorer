@@ -1,5 +1,7 @@
+import Decimal from "decimal.js";
+
 import { TransactionInfo } from "src/api/api";
-import { formatHashWithEllipsis } from "src/utils";
+import { formatGas, formatHashWithEllipsis } from "src/utils";
 
 import { Anchor } from "./Anchor";
 import { Operation } from "./Operation";
@@ -24,6 +26,7 @@ export const TransactionsList = ({
           <Th />
           <Th>Hash</Th>
           <Th>Op</Th>
+          <Th>Gas Used</Th>
         </Tr>
       </Thead>
       <Tbody>
@@ -42,6 +45,7 @@ export const TransactionsList = ({
             <Td>
               <Operation operation={transaction.operation} />
             </Td>
+            <Td>{formatGas(transaction.gasUsed)}</Td>
           </Tr>
         ))}
       </Tbody>

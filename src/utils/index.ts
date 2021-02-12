@@ -15,6 +15,18 @@ export const gasPercentage = (gasUsed: number, gasLimit: number): string =>
 
 const reverse = (str: string) => str.split("").reverse().join("");
 
+export const formatGas = (gas: string) => {
+  const reversedChunks = reverse(gas).match(/.{1,3}/g) ?? [];
+
+  // let whole = null;
+  // if (reversedChunks.length > 6) {
+  //   whole = reversedChunks.slice(6);
+  //   reversedChunks = reversedChunks.slice(0, 6);
+  // }
+
+  return reversedChunks.reverse().map(reverse).join(",");
+};
+
 export const formatEth = (
   eth: string,
   unit: "eth" | "gwei" | "wei" = "eth"

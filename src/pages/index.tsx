@@ -100,7 +100,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async function () {
       transactionsBlockHash: latestBlock.hash,
       transactions: await getBlockTrace(latestBlock.hash)
         .then(transactionsInfoFromBlock)
-        .then((txs) => txs.slice(0, 20)),
+        .then((txs) => txs.slice(0, 50)),
     },
   };
 };
