@@ -34,6 +34,11 @@ const StyledChip = styled(Chip)<Props & ChipProps>`
             background-color: ${green};
           `;
         }
+        case "CREATE2": {
+          return css`
+            background-color: ${chroma(green).brighten().hex()};
+          `;
+        }
         case "LOG0": {
           return css`
             background-color: ${chroma(blue).hex()};
