@@ -1,9 +1,4 @@
 import { Box, Divider, Paper, Tab, Tabs } from "@material-ui/core";
-import { Radio, TextField } from "@material-ui/core";
-import FormControl, { FormControlProps } from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@material-ui/core/FormLabel";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
 import { ArrowRight } from "@material-ui/icons";
 import {
@@ -28,12 +23,7 @@ import {
 import { gray } from "src/styles/colors";
 import { body } from "src/styles/typography";
 import { formatEth, formatHashWithEllipsis, gasPercentage } from "src/utils";
-
-const StyledFormControl = styled(FormControl)<FormControlProps>`
-  & .MuiFormGroup-root {
-    flex-direction: row;
-  }
-`;
+import { EvalEvmByteCode } from "src/components/EvalEvmByteCode";
 
 export declare type GasRange = readonly [number, number];
 
@@ -165,22 +155,6 @@ export default function Transaction({
     setTabValue(newValue);
   };
 
-  const [radioValue, setRadioValue] = React.useState("before");
-
-  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRadioValue((event.target as HTMLInputElement).value);
-  };
-
-  const [evmByteCodeValue, setEvmByteCodeValue] = React.useState<
-    string | undefined
-  >();
-
-  const handleEvmByteCodeChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setEvmByteCodeValue((event.target as HTMLInputElement).value);
-  };
-
   if (!transactionTrace) {
     return <div>Transaction not found</div>;
   }
@@ -301,39 +275,7 @@ export default function Transaction({
             <MessageData data={selectedTransactionItem.message.data} />
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
-            <form noValidate autoComplete="off">
-              <StyledFormControl>
-                <FormLabel component="legend">Gas value</FormLabel>
-                <RadioGroup
-                  aria-label="gender"
-                  name="gender1"
-                  value={radioValue}
-                  onChange={handleRadioChange}
-                >
-                  <FormControlLabel
-                    value="before"
-                    control={<Radio />}
-                    label="Before"
-                  />
-                  <FormControlLabel
-                    value="after"
-                    control={<Radio />}
-                    label="After"
-                  />
-                </RadioGroup>
-              </StyledFormControl>
-
-              <TextField
-                id="evm-code"
-                label="EVM Code in Hex"
-                multiline
-                fullWidth
-                size="medium"
-                variant="filled"
-                value={evmByteCodeValue}
-                onChange={handleEvmByteCodeChange}
-              />
-            </form>
+            <EvalEvmByteCode />
           </TabPanel>
         </Section>
       </Sections>
