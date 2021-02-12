@@ -206,7 +206,7 @@ export default function Transaction({
 
           <KeyValue>
             <Key>Gas Price: </Key>
-            <Value>{formatEth(transactionTrace.gasPrice)}</Value>
+            <Value>{formatEth(transactionTrace.gasPrice, "gwei")}</Value>
           </KeyValue>
 
           <KeyValue>

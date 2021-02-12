@@ -70,7 +70,7 @@ export default function Home({
                       <span>{formatHashWithEllipsis(block.hash)}</span>
                     </Anchor>
                   </Td>
-                  <Td>{formatEth(block.gasPrice)} </Td>
+                  <Td>{formatEth(block.gasPrice, "gwei")} </Td>
                 </Tr>
               ))}
             </Tbody>

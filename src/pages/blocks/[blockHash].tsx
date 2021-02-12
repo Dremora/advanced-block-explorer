@@ -105,7 +105,7 @@ export default function Block({ blockHeader, rewards, transactions }: Props) {
                 {rewards.map((reward) => (
                   <li key={reward.beneficiary}>
                     <Value>{reward.beneficiary}</Value>
-                    <Value>{formatEth(reward.reward)}</Value>
+                    <Value>{formatEth(reward.reward, "eth")}</Value>
                   </li>
                 ))}
               </ul>
