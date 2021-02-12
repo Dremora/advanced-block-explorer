@@ -31,7 +31,14 @@ export function EvalEvmByteCode() {
   };
 
   return (
-    <form noValidate autoComplete="off">
+    <form
+      noValidate
+      autoComplete="off"
+      id="eval-evm-byte-form"
+      onSubmit={() => {
+        console.log("submit");
+      }}
+    >
       <StyledFormControl>
         <FormLabel component="legend">Gas value</FormLabel>
         <RadioGroup
@@ -57,7 +64,12 @@ export function EvalEvmByteCode() {
       />
 
       <Box paddingTop={1}>
-        <Button variant="outlined" color="primary">
+        <Button
+          variant="outlined"
+          color="primary"
+          type="submit"
+          form="eval-evm-byte-form"
+        >
           Run
         </Button>
       </Box>
